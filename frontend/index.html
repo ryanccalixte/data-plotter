@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Data Plotter - Home{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/styles/index.css?v=2">
+
+<h2>Welcome to the Data Plotter Project</h2>
+    <p>This is the frontend for the Data Plotter Project. You can interact with the backend API to plot your data.</p>
+    <div id="uploadcontentdiv">
+        <div id="plotuploaddiv">
+            <h3>Upload Your Data</h3>
+            <input type="file" id="fileInput" accept=".csv"/>
+
+            <select id="plottype">
+                <option value="line">Line</option>
+                <option value="bar">Bar</option>
+                <option value="scatter">Scatter</option>
+                <option value="scatter3d">3D Scatter</option>
+                <option value="line3d">3D Line</option>
+                <option value="bubble3d">3D Bubble</option>
+                <option value="surface3d">3D Surface</option>
+            </select>
+
+            <button id="plotdatabutton" onclick="sendData()">Plot Data</button>
+        </div>
+        <div id="datadisplaydiv">
+            <h2>Data Display Area</h2>
+            <div id="dataview"></div>
+        </div>
+    </div>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+           reader.onload = function(e) {
+            const contents = e.target.result;
+            const rows = contents.trim().split('\n').map(row => row.split(','));
+            
+            let html = '<table>';
+            rows.forEach((row, i) => {
+                html += '<tr>';
+                row.forEach(cell => {
+                   
+                    html += i === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table>';
+
+            document.getElementById('dataview').innerHTML = html; 
+        };
+            reader.readAsText(file);
+        }
+    });
+
+    async function sendData() {
+        const fileInput = document.getElementById('fileInput');
+        const plotTypeSelect = document.getElementById('plottype');
+        const file = fileInput.files[0];
+        const plotType = plotTypeSelect.value;
+
+        if (!file) {
+            alert("Please select a file to upload.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('plot_type', plotType);
+
+        try {
+            const response = await fetch('/plot', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const html = await response.text();  // get HTML instead of JSON
+                document.open();
+                document.write(html);               // render the graph page
+                document.close();
+                alert("File uploaded successfully!");
+            } 
+            else {
+                alert("Failed to upload the file.");
+            }
+        } 
+        catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while uploading the file.");
+        }
+    }
+
+
+</script>
+
+{% endblock %}
+    

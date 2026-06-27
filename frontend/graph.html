@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Data Plotter - Graph{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="/static/styles/graph.css?v=2">
+    <div id="bottomsection">
+        <div id="statsdiv">
+            <h3>Plot Stats</h3>
+            <div class="statsList">
+                <div class="statItem">
+                    <span class="statLabel">Plot type</span>
+                    <span class="statValue">{{ plot_stats.plot_type }}</span>
+                </div>
+                <div class="statItem">
+                    <span class="statLabel">Rows</span>
+                    <span class="statValue">{{ plot_stats.total_rows }}</span>
+                </div>
+                <div class="statItem">
+                    <span class="statLabel">Columns plotted</span>
+                    <span class="statValue">{{ plot_stats.total_columns }}</span>
+                </div>
+                <div class="statItem">
+                    <span class="statLabel">Traces</span>
+                    <span class="statValue">{{ plot_stats.traces_count }}</span>
+                </div>
+            </div>
+            <div class="columnSummary">
+                <h4>Column summary</h4>
+                <ul>
+                    {% for column in plot_stats.column_stats %}
+                        <li>
+                            <strong>{{ column.name }}</strong>
+                            <span>Min {{ column.min }} · Max {{ column.max }} · Mean {{ column.mean }} · Std {{ column.std }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div id="graphdiv">
+            {{ plotdiv|safe }}
+        </div>
+        <div id="optionsdiv">
+            <h3>Graph Options</h3>
+            <!-- <div id="legendoptions">
+                <h4>Legend</h4>
+                <label><input type="checkbox" id="legend-toggle" checked> Show Legend</label>
+            </div> -->
+            <div id="tracesdiv">
+                <h4>Traces</h4>
+                {% for trace in traces %}
+                    <div class="trace-row">
+                        <label>
+                            <div class="trace-badge" style="background-color: {{ trace.color }};"></div>
+                            <p>{{ trace.name }}</p>
+                            <input type="checkbox" class="trace-toggle" data-trace-name="{{ trace.name }}" checked>  
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const plot = document.querySelector('.js-plotly-plot');
+
+            document.querySelectorAll('.trace-toggle').forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    const traceName = this.dataset.traceName;
+                    const traceIndex = plot.data.findIndex(t => t.name === traceName);
+                    if (traceIndex === -1) return;
+
+                    Plotly.restyle(plot, {
+                        visible: this.checked ? true : 'legendonly'
+                    }, [traceIndex]);
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

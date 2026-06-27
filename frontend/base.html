@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Data Plotter{% endblock %}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        nav {
+            width: 100%;
+            background-color: #111111;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            border-bottom: rgb(125, 125, 125) solid 1.5px;
+        }
+        #home-link{
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+            font-size: 35px;
+            font-weight: 800;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" id="home-link">Data Plotter</a>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
