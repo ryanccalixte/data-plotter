@@ -1,6 +1,6 @@
 # Data Plotter
 
-Data Plotter is a simple web app for turning CSV data into interactive charts. Upload a file, pick a chart style, and view your results in a clean browser-based dashboard.
+Data Plotter is a small FastAPI web app that lets you upload a CSV file, clean the numeric data, and generate a Plotly chart from it.
 
 ## Features
 

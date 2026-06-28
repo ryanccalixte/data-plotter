@@ -6,11 +6,12 @@
 <link rel="stylesheet" href="/static/styles/index.css?v=2">
 
 <h2>Welcome to the Data Plotter Project</h2>
-    <p>This is the frontend for the Data Plotter Project. You can interact with the backend API to plot your data.</p>
+    <p>Please upload a file to plot your data and view it in many different ways!</p>
     <div id="uploadcontentdiv">
         <div id="plotuploaddiv">
             <h3>Upload Your Data</h3>
-            <input type="file" id="fileInput" accept=".csv"/>
+            <input type="file" id="fileInput" accept=".csv,.tsv,.txt,.json,.xlsx"/>
+            <p id="filetypes">required file types: .csv, .tsv, .txt, .json, .xlsx</p>
 
             <select id="plottype">
                 <option value="line">Line</option>
